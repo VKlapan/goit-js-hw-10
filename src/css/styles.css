@@ -12,6 +12,14 @@ body {
   line-height: 1.5;
 }
 
+img {
+  width: 20px;
+  margin-right: 2px;
+}
+
+ul {
+  list-style: none;
+}
 #search-box {
   font: inherit;
   padding: 8px;
