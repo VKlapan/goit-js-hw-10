@@ -4,11 +4,6 @@ import debounce from 'lodash.debounce';
 
 import { fetchCountries } from './fetchCountries';
 
-// const fetchCountries = searchKey =>
-//   fetch(
-//     `https://restcountries.com/v3.1/name/${searchKey}?fields=name,capital,population,languages,flags`
-//   );
-
 const DEBOUNCE_DELAY = 300;
 
 const refs = {
@@ -18,16 +13,6 @@ const refs = {
 };
 
 const getCountryName = e => e.target.value.trim().toLowerCase();
-
-const getCountriesArr = r => {
-  if (r.status === 200) {
-    return r.json();
-  }
-
-  if (r.status === 404) {
-    return Promise.reject('not found');
-  }
-};
 
 const renderSearchResultMarkup = countriesArr => {
   if (countriesArr.length > 10) {
@@ -113,7 +98,6 @@ const doSearch = e => {
   }
 
   fetchCountries(searchedCountry)
-    .then(getCountriesArr)
     .then(renderSearchResultMarkup)
     .then(addSearchResult)
     .catch(errorsHandler);
