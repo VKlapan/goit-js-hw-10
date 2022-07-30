@@ -2,15 +2,22 @@ import './css/styles.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import debounce from 'lodash.debounce';
 
-//import fetchCountries from './fetchCountries';
+// as before:
+// - 'use strict';
+// - iife
+// - dom ready
+// - main function
 
 const fetchCountries = searchKey =>
   fetch(
     `https://restcountries.com/v3.1/name/${searchKey}?fields=name,capital,population,languages,flags`
   );
 
+// It's not something global, but rather specific to once function
 const DEBOUNCE_DELAY = 300;
 
+// Much better
+// It's kind of a hungarian notation, not good ;)
 const refs = {
   countriesListEl: document.querySelector('.country-list'),
   countryInfoEl: document.querySelector('.country-info'),
@@ -27,8 +34,10 @@ const getCountriesArr = r => {
   if (r.status === 404) {
     return Promise.reject('not found');
   }
+  // Here should be other errors
 };
 
+// This function has to be decomposed even further
 const renderSearchResultMarkup = countriesArr => {
   if (countriesArr.length > 10) {
     return Promise.reject('too many');
@@ -36,6 +45,7 @@ const renderSearchResultMarkup = countriesArr => {
 
   if (countriesArr.length > 1) {
     return {
+      // As you not using TS, it's better to have CONSTs for types
       type: 'list',
       markup: countriesArr
         .map(
@@ -70,6 +80,7 @@ const addSearchResult = searchResultMarkup => {
   clearResult();
 
   if (searchResultMarkup.type === 'list') {
+    // Why not just innerHTML?
     refs.countriesListEl.insertAdjacentHTML(
       'beforeend',
       searchResultMarkup.markup
@@ -93,6 +104,8 @@ const alarmNotFound = () => {
 };
 
 const errorsHandler = error => {
+  // As you not using TS, it's better to have CONSTs for error types
+  // Consider using map for error type to handler instead
   if (error === 'not found') {
     alarmNotFound();
     return;
@@ -112,6 +125,7 @@ const doSearch = e => {
     return;
   }
 
+  // In real life it would be nice to have response validation as well
   fetchCountries(searchedCountry)
     .then(getCountriesArr)
     .then(renderSearchResultMarkup)
@@ -119,7 +133,10 @@ const doSearch = e => {
     .catch(errorsHandler);
 };
 
+// I would think about debouncing fetch instead
 refs.countryInputEl.addEventListener(
   'input',
   debounce(doSearch, DEBOUNCE_DELAY)
 );
+
+// Overall MUTCH better!
